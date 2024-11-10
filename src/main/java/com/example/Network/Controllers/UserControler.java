@@ -25,11 +25,6 @@ public class UserControler {
     // Common Login Page for both admin and user
 
     // Admin home page
-    @Secured({"ROLE_ADMIN"})
-    @GetMapping("/admin_home")
-    public String adminHome() {
-        return "admin_home";  // Serve the admin_home.html template
-    }
 
     // User home page
     @Secured({"ROLE_USER"})
@@ -39,10 +34,15 @@ public class UserControler {
     }
 
 
-    @GetMapping("/login")
-    public String login(){
-        return "admin_login";
+
+
+    @GetMapping("/user/login")
+    public String userLogin(){
+        return "login";
     }
+
+
+
 
     // Endpoint to add a new user, no login required
     @PostMapping("/addUser")

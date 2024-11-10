@@ -1,24 +1,28 @@
 package com.example.Network.Repository;
 
-import com.example.Network.Entities.User;
+
+import com.example.Network.RequestDtos.AdminDto;
 import com.example.Network.RequestDtos.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
+
 @Lazy
 @Repository
-public class UserRepository {
+public class AdminRepository {
+    private final JdbcTemplate jdbcTemplate;
+    private final BCryptPasswordEncoder encoder;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    public AdminRepository(JdbcTemplate jdbcTemplate, BCryptPasswordEncoder encoder) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.encoder = encoder;
+    }
 
     // Insert a new user into the database
-    public int saveUser(UserDto userDto) {
+    public int saveAdmin(AdminDto adminDto)  {
 //        if (!isUsersTablePresent()) {
 //            String createTableSql = "CREATE TABLE IF NOT EXISTS users (" +
 //                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
@@ -31,13 +35,13 @@ public class UserRepository {
 //            jdbcTemplate.execute(createTableSql);
 //        }
 
-        String encodedPassword = encoder.encode(userDto.getPassword());
+        String encodedPassword = encoder.encode(adminDto.getPassword());
 
-        if(userDto.getEmail().isEmpty()) userDto.setEmail(null);
-
-        String sql = "INSERT INTO users (username, password,email,role) VALUES (?, ? ,? , ?)";
-        return jdbcTemplate.update(sql, userDto.getUsername(), encodedPassword,userDto.getEmail(),userDto.getRole());
+        String sql = "INSERT INTO admin (username, password,email,role) VALUES (?, ? ,? , ?)";
+        return jdbcTemplate.update(sql, adminDto.getUsername(), encodedPassword,adminDto.getEmail(),adminDto.getRole());
     }
+
+
 
 //    public boolean isUsersTablePresent() {
 //        // Query to check if the 'users' table exists in the current database
@@ -48,5 +52,6 @@ public class UserRepository {
 //
 //        return count > 0; // Return true if the table exists, false otherwise
 //    }
+
 
 }
